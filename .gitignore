@@ -1,9 +1,12 @@
-# directories and content
+# irrelevant directories and its contents
 __pycache__/
 
+# test files
+test_get_count.py
+
 # executables
-generate-authors.sh
 git_render.sh
+generate-authors.sh
 
 # json files
 *.json

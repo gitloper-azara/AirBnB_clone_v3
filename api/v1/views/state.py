@@ -69,7 +69,7 @@ def create_state():
 def update_state(state_id):
     """Updates a State object by given state_id"""
     states = storage.get(State, state_id)
-    if states == None:
+    if states is None:
         abort(404)
     content = request.get_json()
     if not content:

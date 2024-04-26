@@ -39,3 +39,26 @@ def delete_state_by_id(state_id):
         storage.save()
         storage.close()
         return jsonify({}), 200
+
+
+@app_views.route('/states', methods=['POST'],
+                 strict_slashes=False)
+def create_state():
+    """Creates a State object using the POST method"""
+    content = request.get_json()
+
+    # if body request is not a valid JSON, raise a 400 error with response
+    if not content:
+        abort(400, 'Not a JSON')
+    # if dict does not contain key=name, raise a 400 error with response
+    if 'name' not in content:
+        abort(400, 'Missing name')
+
+    # attempt to return new State with status code 201
+    state = State(**content)
+    storage.new(state)
+    state.save()
+    storage.close()
+
+    state_obj = state.to_dict()
+    return jsonify(state_obj), 201

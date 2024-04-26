@@ -10,3 +10,6 @@ generate-authors.sh
 
 # json files
 *.json
+
+# test files
+test_get_count.py

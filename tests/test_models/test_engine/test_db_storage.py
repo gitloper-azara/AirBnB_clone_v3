@@ -68,6 +68,30 @@ test_db_storage.py'])
                             "{:s} method needs a docstring".format(func[0]))
 
 
+class TestDBStorage(unittest.TestCase):
+    """Test for new methods get() and count()"""
+    def setUp(self):
+        """Set up for methods test"""
+        self.state = State(name="Madagascar")
+        DBStorage.new(self.state)
+        DBStorage.save()
+
+    def tearDown(self):
+        """tear down session"""
+        DBStorage.delete(self.state)
+        DBStorage.save()
+
+    def test_get(self):
+        """test get() method"""
+        retrieved_state = DBStorage.get(State, self.state.id)
+        self.assertEqual(retrieved_state, self.state)
+
+    def test_count(self):
+        """test count() method"""
+        count = DBStorage.count(State)
+        self.assertEqual(count, 1)
+
+
 class TestFileStorage(unittest.TestCase):
     """Test the FileStorage class"""
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
@@ -86,3 +110,7 @@ class TestFileStorage(unittest.TestCase):
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_save(self):
         """Test that save properly saves objects to file.json"""
+
+
+if __name__ == '__main__':
+    unittest.main()

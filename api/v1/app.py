@@ -3,7 +3,7 @@
 starts API
 """
 
-from flask import Flask
+from flask import Flask, jsonify
 from models import storage
 from api.v1.views import app_views
 from os import getenv
@@ -12,6 +12,15 @@ from os import getenv
 # create a variable app, instance of Flask
 app = Flask(__name__)
 app.register_blueprint(app_views)
+
+
+@app.errorhandler(404)
+def not_found(error):
+    """custom 404 display using json"""
+    err_message = {
+        "error": "Not found"
+    }
+    return jsonify(err_message), 404
 
 
 if __name__ == '__main__':

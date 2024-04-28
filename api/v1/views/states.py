@@ -20,27 +20,23 @@ def get_states():
                  strict_slashes=False)
 def get_state_by_id(state_id):
     """Retrieves a State object by id"""
-    state = storage.get(eval('State'), state_id)
+    state = storage.get(State, state_id)
     if state:
-        state_obj = state.to_dict()
-        return jsonify(state_obj)
-    else:
-        abort(404)
+        return jsonify(state.to_dict())
+    abort(404)
 
 
 @app_views.route('/states/<state_id>', methods=['DELETE'],
                  strict_slashes=False)
 def delete_state_by_id(state_id):
     """Deletes a State object by id"""
-    del_state = storage.get(eval('State'), state_id)
+    del_state = storage.get(State, state_id)
     if del_state:
         storage.delete(del_state)
         storage.save()
-        response = jsonify({})
-        response.status_code = 200
-        return response
     else:
         abort(404)
+    return jsonify({}), 200
 
 
 @app_views.route('/states/', methods=['POST'],
@@ -65,17 +61,14 @@ def create_state():
     storage.new(state)
     storage.save()
 
-    state_obj = state.to_dict()
-    response = jsonify(state_obj)
-    response.status_code = 201
-    return response
+    return jsonify(state.to_dict()), 201
 
 
 @app_views.route('/states/<state_id>', methods=['PUT'],
                  strict_slashes=False)
 def update_state(state_id):
     """Updates a State object by given state_id"""
-    states = storage.get(eval('State'), state_id)
+    states = storage.get(State, state_id)
     if states:
         content = request.get_json()
         if type(content) is not dict:
@@ -89,9 +82,6 @@ def update_state(state_id):
                 setattr(states, key, val)
         storage.save()
 
-        state_obj = states.to_dict()
-        response = jsonify(state_obj)
-        response.status_code = 200
-        return response
+        return jsonify(states.to_dict()), 200
     else:
         abort(404)

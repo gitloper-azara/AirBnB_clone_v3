@@ -20,25 +20,26 @@ def get_states():
                  strict_slashes=False)
 def get_state_by_id(state_id):
     """Retrieves a State object by id"""
-    state = storage.get(State, state_id)
-    if not state:
+    state = storage.get(eval('State'), state_id)
+    if state:
+        state_obj = state.to_dict()
+        return jsonify(state_obj)
+    else:
         abort(404)
-    state_obj = state.to_dict()
-    return jsonify(state_obj)
 
 
 @app_views.route('/states/<state_id>', methods=['DELETE'],
                  strict_slashes=False)
 def delete_state_by_id(state_id):
     """Deletes a State object by id"""
-    if state_id:
-        del_state = storage.get(State, state_id)
-        if not del_state:
-            abort(404)
-        del_state.delete()
+    del_state = storage.get(eval('State'), state_id)
+    if del_state:
+        storage.delete(del_state)
         storage.save()
         storage.close()
         return jsonify({}), 200
+    else:
+        abort(404)
 
 
 @app_views.route('/states', methods=['POST'],
@@ -48,11 +49,15 @@ def create_state():
     content = request.get_json()
 
     # if body request is not a valid JSON, raise a 400 error with response
-    if not content:
-        abort(400, 'Not a JSON')
+    if type(content) is not dict:
+        response = jsonify({'error': 'Not a JSON'})
+        response.status_code = 400
+        return response
     # if dict does not contain key=name, raise a 400 error with response
-    if 'name' not in content:
-        abort(400, 'Missing name')
+    if 'name' not in content.keys():
+        response = jsonify({'error': 'Missing name'})
+        response.status_code = 400
+        return response
 
     # attempt to return new State with status code 201
     state = State(**content)
@@ -61,26 +66,33 @@ def create_state():
     storage.close()
 
     state_obj = state.to_dict()
-    return jsonify(state_obj), 201
+    response = jsonify(state_obj)
+    response.status_code = 201
+    return response
 
 
 @app_views.route('/states/<state_id>', methods=['PUT'],
                  strict_slashes=False)
 def update_state(state_id):
     """Updates a State object by given state_id"""
-    states = storage.get(State, state_id)
-    if states is None:
+    states = storage.get(eval('State'), state_id)
+    if states:
+        content = request.get_json()
+        if type(content) is not dict:
+            response = jsonify({'error': 'Not a JSON'})
+            response.status_code = 400
+            return response
+
+        ignore_keys = ['id', 'created_at', 'updated_at']
+        for key, val in content.items():
+            if key not in ignore_keys:
+                setattr(states, key, val)
+        states.save()
+        storage.close()
+
+        state_obj = states.to_dict()
+        response = jsonify(state_obj)
+        response.status_code = 200
+        return response
+    else:
         abort(404)
-    content = request.get_json()
-    if not content:
-        abort(400, 'Not a JSON')
-
-    ignore_keys = ['id', 'created_at', 'updated_at']
-    for key, val in content.items():
-        if key not in ignore_keys:
-            setattr(states, key, val)
-    states.save()
-    storage.close()
-
-    state_obj = states.to_dict()
-    return jsonify(state_obj), 200

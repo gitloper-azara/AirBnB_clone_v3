@@ -36,13 +36,14 @@ def delete_state_by_id(state_id):
     if del_state:
         storage.delete(del_state)
         storage.save()
-        storage.close()
-        return jsonify({}), 200
+        response = jsonify({})
+        response.status_code = 200
+        return response
     else:
         abort(404)
 
 
-@app_views.route('/states', methods=['POST'],
+@app_views.route('/states/', methods=['POST'],
                  strict_slashes=False)
 def create_state():
     """Creates a State object using the POST method"""
@@ -62,8 +63,7 @@ def create_state():
     # attempt to return new State with status code 201
     state = State(**content)
     storage.new(state)
-    state.save()
-    storage.close()
+    storage.save()
 
     state_obj = state.to_dict()
     response = jsonify(state_obj)
@@ -87,8 +87,7 @@ def update_state(state_id):
         for key, val in content.items():
             if key not in ignore_keys:
                 setattr(states, key, val)
-        states.save()
-        storage.close()
+        storage.save()
 
         state_obj = states.to_dict()
         response = jsonify(state_obj)

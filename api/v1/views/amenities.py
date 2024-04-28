@@ -66,9 +66,9 @@ def create_amenity():
             storage.save()
             return jsonify(amenity.to_dict()), 201
         else:
-            return jsonify('Missing name'), 400
+            return abort(400, description='Missing name')
     else:
-        return jsonify('Not a JSON'), 400
+        return abort(400, description='Not a JSON')
 
 
 @app_views.route(
@@ -80,7 +80,7 @@ def update_amenity(amenity_id):
     if amenity:
         content = request.get_json()
         if type(content) is not dict:
-            return jsonify('Not a JSON'), 400
+            return abort(400, description='Not a JSON')
 
         ignore_keys = ['id', 'created_at', 'updated_at']
         for key, val in content.items():

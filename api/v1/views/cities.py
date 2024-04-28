@@ -21,16 +21,16 @@ def get_cities(state_id):
         abort(404)
 
 
-# @app_views.route(
-#        '/cities/<city_id>', methods=['GET'], strict_slashes=False
-#        )
-# def get_city_by_id(city_id):
-#    """Retrieves a City object by city id"""
-#    city = storage.get('City', city_id)
-#    if city:
-#        return jsonify(city.to_dict())
-#    else:
-#        abort(404)
+@app_views.route(
+        '/cities/<city_id>', methods=['GET'], strict_slashes=False
+        )
+def get_city_by_id(city_id):
+    """Retrieves a City object by city id"""
+    city = storage.get('City', city_id)
+    if city:
+        return jsonify(city.to_dict())
+    else:
+        abort(404)
 
 
 # @app_views.route(
@@ -57,9 +57,11 @@ def get_cities(state_id):
 #    if state:
 #        content = request.get_json()
 #
-        # if body request is not a valid JSON, raise a 400 error with response
+        # if body request is not a valid JSON, raise a 400 error with
+        # response
 #        if type(content) is dict:
-#            # if dict does not contain key=name, raise a 400 error with response
+#            # if dict does not contain key=name, raise a 400 error with
+             # response
 #            if 'name' in content.keys():
 #                # attempt to return new State with status code 201
 #                state = City(**content)

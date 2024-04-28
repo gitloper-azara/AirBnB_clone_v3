@@ -3,6 +3,7 @@ __pycache__/
 
 # test files
 test_get_count.py
+main_place_amenities.py
 
 # executables
 git_render.sh

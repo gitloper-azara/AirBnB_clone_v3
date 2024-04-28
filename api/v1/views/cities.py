@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""New view for State objs that handles all default RESTFul API actions"""
+"""New view for City objs that handles all default RESTFul API actions"""
 from api.v1.views import app_views
 from flask import jsonify, request, abort
 from models.state import State
@@ -64,7 +64,7 @@ def create_city(state_id):
             # if dict does not contain key=name, raise a 400 error with
             # response
             if 'name' in content.keys():
-                # attempt to return new State with status code 201
+                # attempt to return new City with status code 201
                 city = City(**content)
                 setattr(city, 'state_id', state_id)
                 storage.new(city)

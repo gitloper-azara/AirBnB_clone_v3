@@ -2,7 +2,7 @@
 """New view for State objs that handles all default RESTFul API actions"""
 from api.v1.views import app_views
 from flask import jsonify, request, abort
-from models.state import City
+from models.city import City
 from models import storage
 
 

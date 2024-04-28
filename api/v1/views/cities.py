@@ -58,9 +58,11 @@ def create_city(state_id):
     if state:
         content = request.get_json()
 
-        # if body request is not a valid JSON, raise a 400 error with response
+        # if body request is not a valid JSON, raise a 400 error with
+        # response
         if type(content) is dict:
-            # if dict does not contain key=name, raise a 400 error with response
+            # if dict does not contain key=name, raise a 400 error with
+            # response
             if 'name' in content.keys():
                 # attempt to return new State with status code 201
                 city = City(**content)

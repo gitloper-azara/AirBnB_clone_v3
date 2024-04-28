@@ -2,6 +2,7 @@
 """New view for State objs that handles all default RESTFul API actions"""
 from api.v1.views import app_views
 from flask import jsonify, request, abort
+from models.state import State
 from models.city import City
 from models import storage
 
@@ -12,7 +13,7 @@ from models import storage
 def get_cities(state_id):
     """Retrieves the list of all City objects"""
     cities_list = []
-    states = storage.get('State', state_id)
+    states = storage.get(State, state_id)
     if states:
         for city in states.cities:
             cities_list.append(city.to_dict())
@@ -26,7 +27,7 @@ def get_cities(state_id):
         )
 def get_city_by_id(city_id):
     """Retrieves a City object by city id"""
-    city = storage.get('City', city_id)
+    city = storage.get(City, city_id)
     if city:
         return jsonify(city.to_dict())
     else:
@@ -38,7 +39,7 @@ def get_city_by_id(city_id):
         )
 def delete_city_by_id(city_id):
     """Deletes a City object by city id"""
-    del_city = storage.get('City', city_id)
+    del_city = storage.get(City, city_id)
     if del_city:
         storage.delete(del_city)
         storage.save()
@@ -53,7 +54,7 @@ def delete_city_by_id(city_id):
         )
 def create_city(state_id):
     """Creates a State object using the POST method"""
-    state = storage.get('State', state_id)
+    state = storage.get(State, state_id)
     if state:
         content = request.get_json()
 
@@ -62,10 +63,11 @@ def create_city(state_id):
             # if dict does not contain key=name, raise a 400 error with response
             if 'name' in content.keys():
                 # attempt to return new State with status code 201
-                state = City(**content)
-                storage.new(state)
+                city = City(**content)
+                setattr(city, 'state_id', state_id)
+                storage.new(city)
                 storage.save()
-                return jsonify(state.to_dict()), 201
+                return jsonify(city.to_dict()), 201
             else:
                 response = jsonify({'error': 'Missing name'})
                 response.status_code = 400

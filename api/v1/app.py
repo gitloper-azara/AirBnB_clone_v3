@@ -14,6 +14,12 @@ app = Flask(__name__)
 app.register_blueprint(app_views)
 
 
+@app.teardown_appcontext
+def close_db(exception):
+    """Closes db"""
+    storage.close()
+
+
 @app.errorhandler(404)
 def not_found(error):
     """custom 404 display using json"""

@@ -53,7 +53,7 @@ def delete_city_by_id(city_id):
         strict_slashes=False
         )
 def create_city(state_id):
-    """Creates a State object using the POST method"""
+    """Creates a City object using the POST method"""
     state = storage.get(State, state_id)
     if state:
         content = request.get_json()
@@ -86,7 +86,7 @@ def create_city(state_id):
         '/cities/<city_id>', methods=['PUT'], strict_slashes=False
         )
 def update_city(city_id):
-    """Updates a State object by given state_id"""
+    """Updates a City object by given state_id"""
     city = storage.get(City, city_id)
     if city:
         content = request.get_json()

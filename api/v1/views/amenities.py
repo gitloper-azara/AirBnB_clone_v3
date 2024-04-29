@@ -37,7 +37,7 @@ def get_amenity_by_id(amenity_id):
         strict_slashes=False
         )
 def delete_amenity_by_id(amenity_id):
-    """Deletes a City object by amenity id"""
+    """Deletes an Amenity object by amenity id"""
     del_amenity = storage.get(Amenity, amenity_id)
     if del_amenity:
         storage.delete(del_amenity)
@@ -51,7 +51,7 @@ def delete_amenity_by_id(amenity_id):
         '/amenities', methods=['POST'], strict_slashes=False
         )
 def create_amenity():
-    """Creates a State object using the POST method"""
+    """Creates an Amenity object using the POST method"""
     content = request.get_json()
 
     # if body request is not a valid JSON, raise a 400 error with

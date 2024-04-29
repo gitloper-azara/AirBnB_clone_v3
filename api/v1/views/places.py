@@ -62,8 +62,6 @@ def create_place(city_id):
         # if body request is not a valid JSON, raise a 400 error with
         # response
         if type(content) is not dict:
-            # if dict does not contain key=name, raise a 400 error with
-            # response
             abort(400, description='Not a JSON')
         if 'user_id' not in content.keys():
             abort(400, description='Missing user_id')
@@ -72,7 +70,7 @@ def create_place(city_id):
         user = storage.get(User, content.get("user_id"))
         if not user:
             abort(404)
-        # attempt to return new User with status code 201
+        # attempt to return new Place with status code 201
         place = Place(**content)
         setattr(place, 'city_id', city_id)
         storage.new(place)

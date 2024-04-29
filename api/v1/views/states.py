@@ -47,20 +47,15 @@ def create_state():
 
     # if body request is not a valid JSON, raise a 400 error with response
     if type(content) is not dict:
-        response = jsonify({'error': 'Not a JSON'})
-        response.status_code = 400
-        return response
+        abort(400, description='Not a JSON')
     # if dict does not contain key=name, raise a 400 error with response
     if 'name' not in content.keys():
-        response = jsonify({'error': 'Missing name'})
-        response.status_code = 400
-        return response
+        abort(400, description='Missing name')
 
     # attempt to return new State with status code 201
     state = State(**content)
     storage.new(state)
     storage.save()
-
     return jsonify(state.to_dict()), 201
 
 
@@ -72,9 +67,7 @@ def update_state(state_id):
     if states:
         content = request.get_json()
         if type(content) is not dict:
-            response = jsonify({'error': 'Not a JSON'})
-            response.status_code = 400
-            return response
+            abort(400, description='Not a JSON')
 
         ignore_keys = ['id', 'created_at', 'updated_at']
         for key, val in content.items():

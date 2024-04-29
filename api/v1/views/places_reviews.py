@@ -4,7 +4,6 @@ actions
 """
 from api.v1.views import app_views
 from flask import jsonify, request, abort
-from models.city import City
 from models.place import Place
 from models.user import User
 from models.review import Review

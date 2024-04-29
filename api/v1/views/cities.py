@@ -71,13 +71,9 @@ def create_city(state_id):
                 storage.save()
                 return jsonify(city.to_dict()), 201
             else:
-                response = jsonify({'error': 'Missing name'})
-                response.status_code = 400
-                return response
+                abort(400, description='Missing name')
         else:
-            response = jsonify({'error': 'Not a JSON'})
-            response.status_code = 400
-            return response
+            abort(400, description='Not a JSON')
     else:
         abort(404)
 
@@ -91,9 +87,7 @@ def update_city(city_id):
     if city:
         content = request.get_json()
         if type(content) is not dict:
-            response = jsonify({'error': 'Not a JSON'})
-            response.status_code = 400
-            return response
+            abort(400, description='Not a JSON')
 
         ignore_keys = ['id', 'state_id', 'created_at', 'updated_at']
         for key, val in content.items():

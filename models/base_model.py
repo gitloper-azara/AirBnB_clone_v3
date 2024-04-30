@@ -73,7 +73,7 @@ class BaseModel:
             new_dict["updated_at"] = new_dict["updated_at"].strftime(time)
         new_dict["__class__"] = self.__class__.__name__
         if save_data is None:
-            if 'password' in new_dict:
+            if models.storage_t != 'db' and 'password' in new_dict:
                 del new_dict['password']
         return new_dict
 

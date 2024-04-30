@@ -14,14 +14,14 @@ class User(BaseModel, Base):
     if models.storage_t == 'db':
         __tablename__ = 'users'
         email = Column(String(128), nullable=False)
-        __password = Column('password', String(128), nullable=False)
+        password = Column('password', String(128), nullable=False)
         first_name = Column(String(128), nullable=True)
         last_name = Column(String(128), nullable=True)
         places = relationship("Place", backref="user")
         reviews = relationship("Review", backref="user")
     else:
         email = ""
-        __password = ""
+        password = ""
         first_name = ""
         last_name = ""
 
@@ -30,11 +30,11 @@ class User(BaseModel, Base):
         super().__init__(*args, **kwargs)
 
     @property
-    def password(self):
+    def _password(self):
         """Getter method for password"""
-        return self.__password
+        return self.password
 
-    @password.setter
-    def password(self, value):
+    @_password.setter
+    def _password(self, value):
         """Setter method for password"""
-        self.__password = hashlib.sha256(value.encode()).hexdigest()
+        self.password = hashlib.sha256(value.encode()).hexdigest()

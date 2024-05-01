@@ -5,7 +5,7 @@ Contains the TestFileStorageDocs classes
 
 from datetime import datetime
 import inspect
-import models
+from models import storage_t
 from models.engine import file_storage
 from models.amenity import Amenity
 from models.base_model import BaseModel
@@ -15,7 +15,6 @@ from models.review import Review
 from models.state import State
 from models.user import User
 import json
-import os
 import pep8
 import unittest
 FileStorage = file_storage.FileStorage
@@ -70,7 +69,7 @@ test_file_storage.py'])
 
 class TestFileStorage(unittest.TestCase):
     """Test the FileStorage class"""
-    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
+    @unittest.skipIf(storage_t == 'db', "not testing file storage")
     def test_all_returns_dict(self):
         """Test that all returns the FileStorage.__objects attr"""
         storage = FileStorage()
@@ -78,7 +77,7 @@ class TestFileStorage(unittest.TestCase):
         self.assertEqual(type(new_dict), dict)
         self.assertIs(new_dict, storage._FileStorage__objects)
 
-    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
+    @unittest.skipIf(storage_t == 'db', "not testing file storage")
     def test_new(self):
         """test that new adds an object to the FileStorage.__objects attr"""
         storage = FileStorage()
@@ -94,7 +93,7 @@ class TestFileStorage(unittest.TestCase):
                 self.assertEqual(test_dict, storage._FileStorage__objects)
         FileStorage._FileStorage__objects = save
 
-    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
+    @unittest.skipIf(storage_t == 'db', "not testing file storage")
     def test_save(self):
         """Test that save properly saves objects to file.json"""
         storage = FileStorage()
@@ -113,3 +112,31 @@ class TestFileStorage(unittest.TestCase):
         with open("file.json", "r") as f:
             js = f.read()
         self.assertEqual(json.loads(string), json.loads(js))
+
+
+@unittest.skipIf(storage_t == 'db',
+                 'attempting to test db storage. switch to file storage')
+def test_get_method(self):
+    """Testing the new get() method for FileStorage"""
+    storage = FileStorage()
+    new_state = State(name='London')
+    new_state.save()
+    self.assertIs(storage.get(State, new_state.id), new_state)
+
+
+@unittest.skipIf(storage_t == 'db',
+                 'attempting to test db storage. switch to file storage')
+def test_count_method(self):
+    """Test the new count method for FileStorage"""
+    storage = FileStorage()
+    length = len(storage.all())
+    self.assertEqual(length, storage.count())
+
+    len_state = len(storage.all(State))
+    self.assertEqual(len_state, storage.count(State))
+
+    new_state = State()
+    new_state.save()
+
+    self.assertEqual(len_state + 1, storage.count(State))
+    self.assertEqual(length + 1, storage.count())

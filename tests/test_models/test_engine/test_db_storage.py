@@ -68,28 +68,32 @@ test_db_storage.py'])
                             "{:s} method needs a docstring".format(func[0]))
 
 
-class TestDBStorage(unittest.TestCase):
-    """Test for new methods get() and count()"""
-    def setUp(self):
-        """Set up for methods test"""
-        self.state = State(name="Madagascar")
-        DBStorage.new(self.state)
-        DBStorage.save()
+@unittest.skipIf(models.storage_t != 'db',
+                 'attempting to test file storage. switch to db storage')
+def test_get_method(self):
+    """Testing the new get() method for FileStorage"""
+    storage = DBStorage()
+    new_state = State(name='London')
+    new_state.save()
+    self.assertIs(storage.get(State, new_state.id), new_state)
 
-    def tearDown(self):
-        """tear down session"""
-        DBStorage.delete(self.state)
-        DBStorage.save()
 
-    def test_get(self):
-        """test get() method"""
-        retrieved_state = DBStorage.get(State, self.state.id)
-        self.assertEqual(retrieved_state, self.state)
+@unittest.skipIf(models.storage_t != 'db',
+                 'attempting to test file storage. switch to db storage')
+def test_count_method(self):
+    """Test the new count method for FileStorage"""
+    storage = DBStorage()
+    length = len(storage.all())
+    self.assertEqual(length, storage.count())
 
-    def test_count(self):
-        """test count() method"""
-        count = DBStorage.count(State)
-        self.assertEqual(count, 1)
+    len_state = len(storage.all(State))
+    self.assertEqual(len_state, storage.count(State))
+
+    new_state = State()
+    new_state.save()
+
+    self.assertEqual(len_state + 1, storage.count(State))
+    self.assertEqual(length + 1, storage.count())
 
 
 class TestFileStorage(unittest.TestCase):

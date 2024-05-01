@@ -113,30 +113,32 @@ class TestFileStorage(unittest.TestCase):
             js = f.read()
         self.assertEqual(json.loads(string), json.loads(js))
 
+    @unittest.skipIf(storage_t == 'db', 'attempting to test db storage. '
+                     'switch to file storage')
+    def test_get_method(self):
+        """Testing the new get() method for FileStorage"""
+        storage = FileStorage()
+        new_state = State(name='London')
+        new_state.save()
+        self.assertIs(storage.get(State, new_state.id), new_state)
 
-@unittest.skipIf(storage_t == 'db',
-                 'attempting to test db storage. switch to file storage')
-def test_get_method(self):
-    """Testing the new get() method for FileStorage"""
-    storage = FileStorage()
-    new_state = State(name='London')
-    new_state.save()
-    self.assertIs(storage.get(State, new_state.id), new_state)
+    @unittest.skipIf(storage_t == 'db', 'attempting to test db storage. '
+                     'switch to file storage')
+    def test_count_method(self):
+        """Test the new count method for FileStorage"""
+        storage = FileStorage()
+        length = len(storage.all())
+        self.assertEqual(length, storage.count())
+
+        len_state = len(storage.all(State))
+        self.assertEqual(len_state, storage.count(State))
+
+        new_state = State()
+        new_state.save()
+
+        self.assertEqual(len_state + 1, storage.count(State))
+        self.assertEqual(length + 1, storage.count())
 
 
-@unittest.skipIf(storage_t == 'db',
-                 'attempting to test db storage. switch to file storage')
-def test_count_method(self):
-    """Test the new count method for FileStorage"""
-    storage = FileStorage()
-    length = len(storage.all())
-    self.assertEqual(length, storage.count())
-
-    len_state = len(storage.all(State))
-    self.assertEqual(len_state, storage.count(State))
-
-    new_state = State()
-    new_state.save()
-
-    self.assertEqual(len_state + 1, storage.count(State))
-    self.assertEqual(length + 1, storage.count())
+if __name__ == '__main__':
+    unittest.main()

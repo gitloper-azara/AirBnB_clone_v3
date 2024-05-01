@@ -68,34 +68,6 @@ test_db_storage.py'])
                             "{:s} method needs a docstring".format(func[0]))
 
 
-@unittest.skipIf(models.storage_t != 'db',
-                 'attempting to test file storage. switch to db storage')
-def test_get_method(self):
-    """Testing the new get() method for FileStorage"""
-    storage = DBStorage()
-    new_state = State(name='London')
-    new_state.save()
-    self.assertIs(storage.get(State, new_state.id), new_state)
-
-
-@unittest.skipIf(models.storage_t != 'db',
-                 'attempting to test file storage. switch to db storage')
-def test_count_method(self):
-    """Test the new count method for FileStorage"""
-    storage = DBStorage()
-    length = len(storage.all())
-    self.assertEqual(length, storage.count())
-
-    len_state = len(storage.all(State))
-    self.assertEqual(len_state, storage.count(State))
-
-    new_state = State()
-    new_state.save()
-
-    self.assertEqual(len_state + 1, storage.count(State))
-    self.assertEqual(length + 1, storage.count())
-
-
 class TestFileStorage(unittest.TestCase):
     """Test the FileStorage class"""
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
@@ -114,6 +86,34 @@ class TestFileStorage(unittest.TestCase):
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_save(self):
         """Test that save properly saves objects to file.json"""
+
+    @unittest.skipIf(models.storage_t != 'db',
+                     'attempting to test file storage. '
+                     'switch to db storage')
+    def test_get_method(self):
+        """Testing the new get() method for FileStorage"""
+        storage = DBStorage()
+        new_state = State(name='London')
+        new_state.save()
+        self.assertIs(storage.get(State, new_state.id), new_state)
+
+    @unittest.skipIf(models.storage_t != 'db',
+                     'attempting to test file storage. '
+                     'switch to db storage')
+    def test_count_method(self):
+        """Test the new count method for FileStorage"""
+        storage = DBStorage()
+        length = len(storage.all())
+        self.assertEqual(length, storage.count())
+
+        len_state = len(storage.all(State))
+        self.assertEqual(len_state, storage.count(State))
+
+        new_state = State()
+        new_state.save()
+
+        self.assertEqual(len_state + 1, storage.count(State))
+        self.assertEqual(length + 1, storage.count())
 
 
 if __name__ == '__main__':

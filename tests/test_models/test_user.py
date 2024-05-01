@@ -34,7 +34,9 @@ class TestUserDocs(unittest.TestCase):
     def test_pep8_conformance_test_user(self):
         """Test that tests/test_models/test_user.py conforms to PEP8."""
         pep8s = pycodestyle.StyleGuide(quiet=False)
-        result = pep8s.check_files(['AirBnB_clone_v3/tests/test_models/test_user.py'])
+        result = pep8s.check_files(
+            ['AirBnB_clone_v3/tests/test_models/test_user.py']
+            )
         if result.total_errors:
             print('PEP8 style errors found:')
             for error in result._deferred_print:
